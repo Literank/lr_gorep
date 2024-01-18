@@ -1,3 +1,4 @@
+//go:install gorep
 package main
 
 import (
