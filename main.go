@@ -12,7 +12,7 @@ import (
 func main() {
 	// Set custom usage message
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: %s [options] pattern file_path\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %s [options] pattern [file_path]\n", os.Args[0])
 		fmt.Println("Options:")
 		flag.PrintDefaults()
 	}
@@ -30,12 +30,15 @@ func main() {
 	// pattern - The pattern to search for
 	// file_path - The path to the file to search in
 	args := flag.Args()
-	if len(args) < 2 {
-		fmt.Println("Both pattern and file_path are required.")
+	if len(args) < 1 {
+		fmt.Println("Argument `pattern` is required.")
 		flag.Usage()
 		os.Exit(0)
 	}
-	pattern, filePath := args[0], args[1]
+	pattern, filePath := args[0], ""
+	if len(args) > 1 {
+		filePath = args[1]
+	}
 
 	options := &grep.Options{}
 	if *ignoreCaseFlag {
@@ -48,7 +51,7 @@ func main() {
 	var result grep.MatchResult
 	var err error
 
-	if *recursiveFlag {
+	if *recursiveFlag && filePath != "" {
 		result, err = grep.GrepRecursive(pattern, filePath, options)
 		if err != nil {
 			log.Fatal("Failed to do recursive grep, error:", err)

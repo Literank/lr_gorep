@@ -86,15 +86,20 @@ func GrepRecursive(pattern string, directoryPath string, options *Options) (Matc
 }
 
 func readFileLines(filePath string) ([]string, error) {
-	// Open the file
-	file, err := os.Open(filePath)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
+	var scanner *bufio.Scanner
+	if filePath == "" { // Read from standard input
+		scanner = bufio.NewScanner(os.Stdin)
+	} else { // Read from the file
+		file, err := os.Open(filePath)
+		if err != nil {
+			return nil, err
+		}
+		defer file.Close()
 
-	// Create a scanner to read the file line by line
-	scanner := bufio.NewScanner(file)
+		// Create a scanner to read the file line by line
+		scanner = bufio.NewScanner(file)
+	}
+
 	var lines []string
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
