@@ -65,7 +65,7 @@ func GrepCount(result MatchResult) int {
 
 func GrepRecursive(pattern string, directoryPath string, options *Options) (MatchResult, error) {
 	results := make(MatchResult)
-	filepath.Walk(directoryPath, func(filePath string, info os.FileInfo, err error) error {
+	err := filepath.Walk(directoryPath, func(filePath string, info os.FileInfo, err error) error {
 		if err != nil {
 			return nil
 		}
@@ -79,6 +79,9 @@ func GrepRecursive(pattern string, directoryPath string, options *Options) (Matc
 		}
 		return nil
 	})
+	if err != nil {
+		return nil, err
+	}
 	return results, nil
 }
 

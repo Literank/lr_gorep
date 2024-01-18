@@ -1,0 +1,30 @@
+linters:
+  enable:
+    - deadcode
+    - errcheck
+    - goimports
+    - golint
+    - govet
+    - ineffassign
+    - staticcheck
+    - structcheck
+    - typecheck
+    - unused
+    - lll
+
+# Custom Configuration for Some Linters
+linters-settings:
+  govet:
+    check-shadowing: true
+  golint:
+    min-confidence: 0.8
+
+# Exclude some generated files or directories
+exclude:
+  - vendor/
+  - generated/
+
+# Settings for golangci-lint
+golangci-lint:
+  build:
+    tags: testing
