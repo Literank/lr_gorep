@@ -36,9 +36,9 @@ func main() {
 		flag.Usage()
 		os.Exit(0)
 	}
-	pattern, filePath := args[0], ""
+	pattern, filePaths := args[0], []string{}
 	if len(args) > 1 {
-		filePath = args[1]
+		filePaths = args[1:]
 	}
 
 	options := &grep.Options{}
@@ -52,13 +52,13 @@ func main() {
 	var result grep.MatchResult
 	var err error
 
-	if *recursiveFlag && filePath != "" {
-		result, err = grep.GrepRecursive(pattern, filePath, options)
+	if *recursiveFlag && len(filePaths) > 0 {
+		result, err = grep.GrepRecursiveMulti(pattern, filePaths, options)
 		if err != nil {
 			log.Fatal("Failed to do recursive grep, error:", err)
 		}
 	} else {
-		result, err = grep.Grep(pattern, filePath, options)
+		result, err = grep.GrepMulti(pattern, filePaths, options)
 		if err != nil {
 			log.Fatal("Failed to grep, error:", err)
 		}

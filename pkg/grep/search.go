@@ -24,6 +24,23 @@ type Options struct {
 	InvertMatch bool
 }
 
+func GrepMulti(pattern string, filePaths []string, options *Options) (MatchResult, error) {
+	if len(filePaths) == 0 {
+		return Grep(pattern, "", options)
+	}
+	result := make(MatchResult)
+	for _, filePath := range filePaths {
+		grepResult, err := Grep(pattern, filePath, options)
+		if err != nil {
+			return nil, err
+		}
+		for k, v := range grepResult {
+			result[k] = v
+		}
+	}
+	return result, nil
+}
+
 func Grep(pattern string, filePath string, options *Options) (MatchResult, error) {
 	lines, err := readFileLines(filePath)
 	if err != nil {
@@ -61,6 +78,20 @@ func GrepCount(result MatchResult) int {
 		count += len(v)
 	}
 	return count
+}
+
+func GrepRecursiveMulti(pattern string, dirPaths []string, options *Options) (MatchResult, error) {
+	result := make(MatchResult)
+	for _, dirPath := range dirPaths {
+		grepResult, err := GrepRecursive(pattern, dirPath, options)
+		if err != nil {
+			return nil, err
+		}
+		for k, v := range grepResult {
+			result[k] = v
+		}
+	}
+	return result, nil
 }
 
 func GrepRecursive(pattern string, directoryPath string, options *Options) (MatchResult, error) {
