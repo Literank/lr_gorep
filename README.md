@@ -2,6 +2,12 @@
 
 Example project: grep-like CLI app implemented in Go.
 
+## Install
+
+```bash
+make install
+```
+
 ## Usage
 
 ```txt
